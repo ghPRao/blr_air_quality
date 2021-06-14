@@ -3,28 +3,33 @@ import time
 import requests
 import sys
 
-
 def retrieve_html():
-    for year in range(2013,2019):
-        for month in range(1,13):
-            if(month<10):
-                url='http://en.tutiempo.net/climate/0{}-{}/ws-421820.html'.format(month
-                                                                          ,year)
+    
+'''
+    Collect San Francisco weather data.
+    Example: https://en.tutiempo.net/climate/mm-yyyy/ws-724940.html
+'''
+
+    for yyyy in range(2010,2021):
+        for mm in range(1,13):
+            # if mm < 10, there are two digits with leading 0 otherwise no leading zero.
+            if(mm<10):
+                url = 'https://en.tutiempo.net/climate/0{}-{}/ws-725300.html'.format(mm, yyyy)
             else:
-                url='http://en.tutiempo.net/climate/{}-{}/ws-421820.html'.format(month
-                                                                          ,year)
+                url = 'https://en.tutiempo.net/climate/{}-{}/ws-725300.html'.format(mm, yyyy)        
+            
             texts=requests.get(url)
             text_utf=texts.text.encode('utf=8')
             
-            if not os.path.exists("Data/Html_Data/{}".format(year)):
-                os.makedirs("Data/Html_Data/{}".format(year))
-            with open("Data/Html_Data/{}/{}.html".format(year,month),"wb") as output:
+            if not os.path.exists("../data/html_data/{}".format(yyyy)):
+                os.makedirs("../data/html_data/{}".format(yyyy))
+            with open("../data/html_data/{}/{}.html".format(yyyy,mm),"wb") as output:
                 output.write(text_utf)
             
-        sys.stdout.flush()
+        sys.stdout.flush() 
         
 if __name__=="__main__":
-    start_time=time.time()
+    start = time.time()
     retrieve_html()
-    stop_time=time.time()
-    print("Time taken {}".format(stop_time-start_time))
+    stop = time.time()
+    print("Time taken {}".format(stop - start))
